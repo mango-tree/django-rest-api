@@ -8,11 +8,9 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from allauth.account.views import LoginView
-from allauth.socialaccount.adapter import get_adapter
 from allauth.socialaccount.helpers import complete_social_login
 from allauth.socialaccount.models import SocialApp, SocialToken, SocialLogin
-from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter, fb_complete_login
+from allauth.socialaccount.providers.facebook.views import fb_complete_login
 
 from apps.authentication.serializers import UserSerializer, GlobalAuthentication
 from apps.authentication.models import User
@@ -76,7 +74,6 @@ class RestFacebookLogin(APIView):
                 'email': original_request.user.email,
             }
 
-            print(data)
 
             return Response(
                 status=200,

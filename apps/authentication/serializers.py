@@ -3,6 +3,8 @@ from rest_framework.authentication import TokenAuthentication
 
 from apps.authentication.models import User
 
+from apps.authentication.models import User
+
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

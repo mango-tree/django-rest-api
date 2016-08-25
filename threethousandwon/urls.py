@@ -20,7 +20,6 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import routers
 from rest_framework_jwt.views import obtain_jwt_token
 
-
 from apps.authentication.views import UserViewSet, RestFacebookLogin, facebookTemplate
 from apps.artist.views import ArtistViewSet
 
