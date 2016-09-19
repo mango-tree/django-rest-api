@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework import routers
+from apps.authentication.views import ObtainAuthToken
+
 from rest_framework_jwt.views import obtain_jwt_token
 
 
@@ -35,7 +37,10 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^api-token-auth/', obtain_jwt_token, name='obtain_jwt_token'),
+
+    url(r'^api-token-auth/', csrf_exempt(ObtainAuthToken.as_view()), name='obtain_auth_token'),
+
+
     url(r'^accounts/', include('allauth.urls')),
     url(r'^facebook/', csrf_exempt(render_facebook_template)),
     # url(r'^social/', include('social.apps.django_app.urls', namespace='social')),

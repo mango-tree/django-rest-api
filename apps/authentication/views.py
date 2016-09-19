@@ -2,6 +2,8 @@ import sys
 import traceback
 
 from django.shortcuts import render
+from rest_framework import parsers
+from rest_framework import renderers
 
 from rest_framework import viewsets
 from rest_framework.authtoken.models import Token
@@ -14,7 +16,7 @@ from allauth.socialaccount.helpers import complete_social_login
 from allauth.socialaccount.models import SocialApp, SocialToken, SocialLogin
 from allauth.socialaccount.providers.facebook.views import fb_complete_login
 
-from apps.authentication.serializers import UserSerializer, GlobalAuthentication
+from apps.authentication.serializers import UserSerializer, GlobalAuthentication, AuthCustomTokenSerializer
 from apps.authentication.models import User
 
 
@@ -72,8 +74,6 @@ class RestFacebookLogin(APIView):
                 'email': original_request.user.email,
             }
 
-            print(data)
-
             return Response(
                 status=200,
                 data=data
@@ -84,3 +84,29 @@ class RestFacebookLogin(APIView):
             return Response(status=401, data={
                 'detail': 'Bad Access Token',
             })
+
+
+class ObtainAuthToken(APIView):
+    throttle_classes = ()
+    permission_classes = ()
+    parser_classes = (
+        parsers.FormParser,
+        parsers.MultiPartParser,
+        parsers.JSONParser,
+    )
+
+    renderer_classes = (renderers.JSONRenderer,)
+
+    def post(self, request):
+        serializer = AuthCustomTokenSerializer(data=request.data)
+        isvalid = serializer.is_valid(raise_exception=True)
+
+        #if isvalid is True:
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+
+        content = {
+            'token': token.key
+        }
+
+        return Response(content)

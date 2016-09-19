@@ -2,6 +2,11 @@ import re
 
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.hashers import check_password
+
+from django.contrib.auth import authenticate
+
+from django.conf import settings
 
 
 class UserManager(BaseUserManager):
@@ -61,6 +66,20 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         """Does the user have permissions to view the app `app_label`?"""
         return True
+
+    def login(email=None, password=None):
+        try:
+            #user = User.model(email=email, password=password)
+            user = User.objects.get(email=email)
+            #user = self.model(email=email)
+            pwd_valid = user.check_password(password)
+            if pwd_valid:
+                return user
+            else:
+                return None
+
+        except User.DoesNotExist:
+            return None
 
     @property
     def is_staff(self):
