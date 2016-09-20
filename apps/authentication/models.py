@@ -2,11 +2,7 @@ import re
 
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from django.contrib.auth.hashers import check_password
-
-from django.contrib.auth import authenticate
-
-from django.conf import settings
+from rest_framework import exceptions
 
 
 class UserManager(BaseUserManager):
@@ -67,19 +63,21 @@ class User(AbstractBaseUser):
         """Does the user have permissions to view the app `app_label`?"""
         return True
 
-    def login(email=None, password=None):
+    # Return User data when email and password are correct
+    def authenticate(self, email=None, password=None):
         try:
-            #user = User.model(email=email, password=password)
             user = User.objects.get(email=email)
-            #user = self.model(email=email)
+
             pwd_valid = user.check_password(password)
             if pwd_valid:
                 return user
             else:
-                return None
+                msg = 'Password is wrong.'
+                raise exceptions.ValidationError(msg)
 
         except User.DoesNotExist:
-            return None
+            msg = 'The user isn\'t exist.'
+            raise exceptions.ValidationError(msg)
 
     @property
     def is_staff(self):

@@ -18,13 +18,11 @@ from django.contrib import admin
 from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework import routers
+
 from apps.authentication.views import ObtainAuthToken
-
-from rest_framework_jwt.views import obtain_jwt_token
-
-
 from apps.authentication.views import UserViewSet, RestFacebookLogin, render_facebook_template
 from apps.artist.views import ArtistViewSet
+
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
@@ -37,7 +35,6 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-
     url(r'^api-token-auth/', csrf_exempt(ObtainAuthToken.as_view()), name='obtain_auth_token'),
 
 

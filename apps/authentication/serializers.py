@@ -4,6 +4,7 @@ from rest_framework.authentication import TokenAuthentication
 
 from apps.authentication.models import User
 
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
@@ -24,18 +25,8 @@ class AuthCustomTokenSerializer(serializers.Serializer):
         password = attrs.get('password')
 
         if email and password:
-            # Check if user sent email
-            """
-            if validateEmail(email_or_username):
-                user_request = get_object_or_404(
-                    User,
-                    email=email_or_username,
-                )
-            """
-            #email = user_request.username
-
-            #user = User.objects.get(email=email)
-            user = User.login(email=email, password=password)
+            # Custom User authenticate
+            user = User.authenticate(self, email=email, password=password)
 
             if user:
                 pass

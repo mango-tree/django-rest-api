@@ -2,9 +2,10 @@ import sys
 import traceback
 
 from django.shortcuts import render
+
+from rest_framework import exceptions
 from rest_framework import parsers
 from rest_framework import renderers
-
 from rest_framework import viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
@@ -101,8 +102,11 @@ class ObtainAuthToken(APIView):
         serializer = AuthCustomTokenSerializer(data=request.data)
         isvalid = serializer.is_valid(raise_exception=True)
 
-        #if isvalid is True:
-        user = serializer.validated_data['user']
+        if isvalid is True:
+            user = serializer.validated_data['user']
+        else:
+            msg = 'authenciation error'
+            raise exceptions.ValidationError(msg)
         token, created = Token.objects.get_or_create(user=user)
 
         content = {
