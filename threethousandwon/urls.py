@@ -35,16 +35,16 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^api-token-auth/', csrf_exempt(ObtainAuthToken.as_view()), name='obtain_auth_token'),
+    url(r'^api-token-auth/', ObtainAuthToken.as_view(), name='obtain_auth_token'),
 
 
     url(r'^accounts/', include('allauth.urls')),
-    url(r'^facebook/', csrf_exempt(render_facebook_template)),
+    url(r'^facebook/', render_facebook_template),
     # url(r'^social/', include('social.apps.django_app.urls', namespace='social')),
     url(r'^auth/', include('rest_framework_social_oauth2.urls')),
     url(
         r'^rest/facebook-login/$',
-        csrf_exempt(RestFacebookLogin.as_view()),
+        RestFacebookLogin.as_view(),
         name='rest_facebook_login'
     ),
 ]
